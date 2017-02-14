@@ -1,0 +1,8 @@
+Param,Value
+url,https://graph.facebook.com
+page,Ballaro.Rai
+query,feed
+access_token,156346967866710%7CgnswdSXw_ObP0RaWj5qqgK_HtCk
+since,20/04/2013-08:00
+until,26/04/2013-20:00
+limit,1000

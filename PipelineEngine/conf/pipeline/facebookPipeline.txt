@@ -1,0 +1,6 @@
+module,conf
+it.pipe.sourcegenerators.FacebookSourceGenerator,conf/facebook/01FacebookSourceGeneratorConf.txt
+it.pipe.transformers.Tokenizer,conf/facebook/02TokenizerConf.txt
+it.pipe.filters.RemoveWordList,conf/facebook/03RemoveWordListConf.txt
+it.pipe.filters.RemoveRegex,conf/facebook/04RemoveRegexConf.txt
+it.pipe.writers.FrequencyCSVWriter,conf/facebook/09FrequencyCSVWriterConf.txt

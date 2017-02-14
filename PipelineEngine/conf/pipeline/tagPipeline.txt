@@ -1,0 +1,6 @@
+module,conf
+it.pipe.sourcegenerators.FileGenerator,conf/tagcleansing/01FileGenerator.txt
+it.pipe.transformers.Tokenizer,conf/tagcleansing/02TokenizerConf.txt
+it.pipe.filters.RemoveWordList,conf/tagcleansing/03RemoveWordListConf.txt
+it.pipe.filters.RemoveRegex,conf/tagcleansing/04RemoveRegexConf.txt
+it.pipe.writers.SimpleCSVWriter,conf/tagcleansing/05SimpleCSVWriter.txt

@@ -1,0 +1,2 @@
+Param,Value
+vocabularyPath2,articoli.csv
