@@ -21,25 +21,58 @@ public class TestSparkSolr {
 	public static int queueSize = 1000;
 	public static int numRunners = 2;
 	public static int pollQueueTime = 20;
-	
-	public static void main(String[] args) {
+
+	public static void main(String[] args) throws Exception, IOException {
 		System.setProperty("hadoop.home.dir", "F:\\portableSoftware\\winutils");
-		
+
 		SparkConf conf = new SparkConf().setAppName("TestSparkSolr").setMaster("local[4]");
 		JavaSparkContext sc = new JavaSparkContext(conf);
 		DriverProgram dp = new DriverProgram();
-		
-		JavaRDD<String> table1 = sc.textFile("src/main/resources/table1.csv");
-		JavaRDD<String> table2 = sc.textFile("src/main/resources/table2.csv");
-		
+
+		//		JavaRDD<String> table1 = sc.textFile("src/main/resources/table1.csv");
+		//		JavaRDD<String> table2 = sc.textFile("src/main/resources/table2.csv");
+
+		JavaRDD<String> table1 = sc.textFile("hdfs://master1.localdomain:8020/tmp/spark/table1.csv");
+		JavaRDD<String> table2 = sc.textFile("hdfs://master1.localdomain:8020/tmp/spark/table2.csv");
+
 		long startTime = System.currentTimeMillis();
-		JavaPairRDD<String, String> table1Pair = table1.mapToPair(line -> new Tuple2<String, String>(line.split(";")[0], line));
-		JavaPairRDD<String, String> table2Pair = table2.mapToPair(line -> new Tuple2<String, String>(line.split(";")[0], line));
+		//		JavaPairRDD<String, String> table1Pair = table1.mapToPair(line -> new Tuple2<String, String>(line.split(";")[0], line));
+		//		JavaPairRDD<String, String> table2Pair = table2.mapToPair(line -> new Tuple2<String, String>(line.split(";")[0], line));
+
+		JavaPairRDD<String, String> table1Pair = table1.mapToPair(new PairFunction<String, String, String>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Tuple2<String, String> call(String line) throws Exception {
+				return new Tuple2<String, String>(line.split(";")[0], line);
+			}
+
+		});
+
+		JavaPairRDD<String, String> table2Pair = table2.mapToPair(new PairFunction<String, String, String>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Tuple2<String, String> call(String line) throws Exception {
+				return new Tuple2<String, String>(line.split(";")[0], line);
+			}
+
+		}
+
+				);
+
 		JavaPairRDD<String, Tuple2<String, String>> join = table1Pair.join(table2Pair);
-		
-//		JavaPairRDD<String, SolrInputDocument> pairs = join.mapToPair( (x, (y, z)) ->  new Tuple2<String, SolrInputDocument>() );
-		
+
+		//		JavaPairRDD<String, SolrInputDocument> pairs = join.mapToPair( (x, (y, z)) ->  new Tuple2<String, SolrInputDocument>() );
+
 		JavaPairRDD<String, SolrInputDocument> pairs = join.mapToPair(new PairFunction<Tuple2<String,Tuple2<String,String>>, String, SolrInputDocument>() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Tuple2<String, SolrInputDocument> call(Tuple2<String, Tuple2<String, String>> mannaggia) throws Exception {
@@ -53,23 +86,16 @@ public class TestSparkSolr {
 				doc.setField("munnezz", value);
 				return new Tuple2<String, SolrInputDocument>((String)doc.getFieldValue("id"), doc);
 			}
-			
+
 		});
-//		pairs.saveAsTextFile("src/main/resources/pairs");
-		
+		//		pairs.saveAsTextFile("src/main/resources/pairs");
+
 		//SolrSupport.streamDocsIntoSolr(zkHost, collection, "id", pairs, queueSize, numRunners, pollQueueTime);
 		SolrSupport.indexDocs(zkHost, collection, 100, pairs.values().rdd());
-//		CloudSolrClient cloudSolrClient = SolrSupport.getCachedCloudClient(zkHost);
-//	    cloudSolrClient.setDefaultCollection(collection);
-//	    try {
-//			cloudSolrClient.commit(true, true);
-//		} catch (SolrServerException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-		
+		CloudSolrClient cloudSolrClient = SolrSupport.getCachedCloudClient(zkHost);
+		cloudSolrClient.setDefaultCollection(collection);
+		cloudSolrClient.commit(true, true);
 		long endTime = System.currentTimeMillis();
-		
+
 	}
 }
