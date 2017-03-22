@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/facebook/facebook4j-core-1.1.11.jar"/>
+	<classpathentry kind="lib" path="lib/facebook/facebook4j-core-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/facebook/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/asm-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jackson-mapper-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jersey-client-1.17.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jersey-core-1.17.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jersey-json-1.17.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jersey-multipart-1.17.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jersey-server-1.17.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jersey-servlet-1.17.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jersey/jsr311-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jsoup/jsoup-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-api-client-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-api-client-appengine-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-api-client-servlet-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-api-services-plus-v1-rev86-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-http-client-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-http-client-appengine-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-http-client-jackson-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-oauth-client-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-oauth-client-appengine-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/google-oauth-client-servlet-1.16.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/plus/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/plus/jackson-core-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/plus/jackson-core-asl-1.9.11.jar"/>
+	<classpathentry kind="lib" path="lib/plus/jdo2-api-2.3-eb.jar"/>
+	<classpathentry kind="lib" path="lib/plus/jsr305-1.3.9.jar"/>
+	<classpathentry kind="lib" path="lib/plus/protobuf-java-2.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/plus/transaction-api-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/plus/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="lib/twitter/twitter4j-async-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/twitter/twitter4j-core-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/twitter/twitter4j-examples-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/twitter/twitter4j-media-support-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/twitter/twitter4j-stream-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/youtube/google-api-services-youtube-v3-rev77-1.17.0-rc.jar"/>
+	<classpathentry kind="lib" path="lib/youtube/google-api-services-youtubeAnalytics-v1-rev24-1.17.0-rc.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>
