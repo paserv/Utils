@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>VSphere Monitoring</title>
+		
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+		
+		<link type="text/css" rel="stylesheet" href="css/jquery-ui-1.11.4.min.css" />
+        <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link type="text/css" rel="stylesheet" href="css/storage-monitoring.css" />
+		
+		<script type="text/javascript" src="js/jquery-2.2.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.11.4.js"></script>
+		<script type="text/javascript" src="js/highcharts.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<script type="text/javascript" src="js/sorttable.js"></script>
+	</head>
+	
+	<body onLoad="getData()">
+
+        <!-- TOP BAR -->
+		<div class="navbar-fixed">
+			<nav>
+				<div class="nav-wrapper blue darken-3">
+					<a href="#" class="brand-logo center">VSphere monitoring</a>
+						<ul class="right hide-on-med-and-down" id="processList">
+							<li><a class="waves-effect waves-light" onclick='getData();'><i class="material-icons left">replay</i>Refresh</a></li>
+						</ul>
+				</div>
+			</nav>
+		</div>
+		
+		<!-- CONTENT -->
+		<div class="container" style="width:80%">
+			<div class="row">
+			  <h5><i class="small material-icons left">storage</i>Storage Monitoring</h5>
+			</div>
+		    <div class="card">
+		          <div id="preloader3" class="preloader-wrapper small active align-center">
+                    <div class="spinner-layer spinner-green-only">
+                      <div class="circle-clipper left">
+                        <div class="circle"></div>
+                      </div><div class="gap-patch">
+                        <div class="circle"></div>
+                      </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                      </div>
+                    </div>
+                  </div>
+			    <div id = "saninfo" class="row"></div>
+				<div id = "datastoregraph" class="row"></div>
+				<div id = "datastoreinfo" class="row"></div>
+			</div>
+			<div style="height:50px"></div>
+			<div class="row">
+              <h5><i class="small material-icons left">important_devices</i>Server Monitoring</h5>
+            </div>
+			<div class="card center-align">
+			     <div id="preloader2" class="preloader-wrapper small active align-center">
+				    <div class="spinner-layer spinner-green-only">
+				      <div class="circle-clipper left">
+				        <div class="circle"></div>
+				      </div><div class="gap-patch">
+				        <div class="circle"></div>
+				      </div><div class="circle-clipper right">
+				        <div class="circle"></div>
+				      </div>
+				    </div>
+				  </div>
+                <div id="serverinfo" class="row"></div>
+            </div>
+            <div style="height:50px"></div>
+		</div>
+		
+		<!-- FOOTER -->
+		<div class="container" style="width:80%">
+				<div class="row">
+				    <div class="col s1">
+				        <img src="css/img/logo.png" height="50" width="50">
+				    </div>
+				    <div class="col s11" style="margin-top:10px">
+                        <b>Software Factory Napoli</b>
+                    </div>
+				</div>
+		</div>
+		
+		<!-- MODAL -->
+		<div id="vminfo" class="modal modal-fixed-footer center-align" style="width:80%">
+            <div id="vmmodal" class="modal-content"></div>
+            <div class="modal-footer">
+                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+		
+		<script>
+			function reset() {
+			    $("#preloader").show();
+			    $("#preloader2").show();
+			    $("#preloader3").show();
+                $("#btnvminfo").hide();
+                
+                $("#vmmodal").empty();
+                $("#saninfo").empty();
+                $("#datastoregraph").empty();
+                $("#serverinfo").empty();
+			}  
+			
+			function getData() {
+			    reset();
+				var dsInfoUrl = "monitor/vsphere/datastoreinfo";
+				var vmInfoUrl = "monitor/vsphere/vminfo";
+				var serverInfoUrl = "monitor/vsphere/serverinfo";
+				getDatastoreInfo(dsInfoUrl);
+				getServerInfo(serverInfoUrl);
+				getVmInfo(vmInfoUrl);
+			}
+			
+			
+			function getServerInfo(url) {
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    contentType: "application/json",
+                    success: function(json) {
+                       createServerCard(json);
+                    },
+                    error: function(e) {
+                        console.log(e.message);
+                    }
+                });
+            }
+			
+			function createServerCard(data) {
+                var htmlServerInfo = "";
+                jQuery.each(data, function() {
+                     var currId = this.ip.split(".").join("_");
+                     var htmlServerInfo = "<div class=\"row\"><div class=\"col s6\"><h5>" + this.ip + "</h5><br><img src=\"css/img/server.jpg\"></div><div class=\"col m3 s12\"><div id=\"cpu_" + currId + "\" style=\"margin-top:-100px\"></div></div><div class=\"col m3 s12\"><div id=\"mem_" + currId + "\" style=\"margin-top:-100px\"></div>";
+                     $("#preloader2").hide();
+                     $("#serverinfo").append(htmlServerInfo);
+                     drawCpuChart(this);
+                     drawMemoryChart(this);
+                });
+            }
+            
+            
+			function getVmInfo(url) {
+	            $.ajax({
+	                type: 'GET',
+	                url: url,
+	                contentType: "application/json",
+	                success: function(json) {
+	                   createVmTable(json);
+	                   //addServerInfo(json);
+	                },
+	                error: function(e) {
+	                    console.log(e.message);
+	                }
+	            });
+			}
+			
+			function createVmTable(data) {
+			    //var tableHeader = "<thead><tr><th>Name</th><th>Used Space</th><th>RAM</th><th>Path</th><th>Power State</th><th>Notes</th></tr></thead>";
+			    var tableHeader = "<thead><tr><th>Name</th><th>Used Space</th><th>RAM</th><th>Path</th><th>Power State</th><th>Host</th></tr></thead>";
+			    var rows = "";
+				 jQuery.each(data, function() {
+	                //rows = rows + "<tr><td>" + this.name + "</td><td>" + this.usedSpace + " GB</td><td>" + this.allocatedRam + " MB</td><td>" + this.path + "</td><td>" + this.powerState + "</td><td>" + this.annotation + "</td></tr>";
+	                rows = rows + "<tr><td>" + this.name + "</td><td>" + this.usedSpace + " GB</td><td>" + this.allocatedRam + " MB</td><td>" + this.path + "</td><td>" + this.powerState + "</td><td>" + this.hostedBy + "</td></tr>";
+	             });
+                var table = "<h4>Virtual Machines</h4><table class=\"sortable\">" + tableHeader + "<tbody>"+ rows + "</tbody></table>";
+                $("#vmmodal").append(table);
+                $("#preloader").hide();
+                $("#btnvminfo").show();
+			}
+			
+			function getDatastoreInfo(url) {
+                $.ajax({
+                        type: 'GET',
+                        url: url,
+                        contentType: "application/json",
+                        success: function(json) {
+                             $("#preloader3").hide();
+                            jQuery.each(json, function() {
+                                //console.log(this.name);
+                                createGraphCard(this.name, this.capacity, this.freeSpace);
+                                drawDatastoreChart(this);
+                            });
+                        },
+                        error: function(e) {
+                            console.log(e.message);
+                        }
+                    });
+            }
+            
+            function createGraphCard(placeholder, capacity, freeSpace) {
+                 if (placeholder == "DShost") {
+                     var htmlSanInfo = "<div class=\"col m6 s12\"><div id=\"" + placeholder + "\" style=\"width:100%; height:400px;\"></div></div><div class=\"col m6 s12\" style=\"margin-top: 50px\"><table class=\"striped centered\"><tbody><tr><td>Used Space</td><td id=\"" + placeholder + "_usedSpace\">" + (parseFloat(capacity) - parseFloat(freeSpace)) + " GB</td></tr><tr><td><strong>Free Space</strong></td><td><div class=\"card-panel teal lighten-3\"><strong id=\"" + placeholder + "_freespace\">" + freeSpace + " GB</strong></div></td></tr><tr><td>Total Space</td><td id=\"" + placeholder + "_totalspace\">" + capacity + " GB</td></tr><tr><td></td><td><a id=\"btnvminfo\" href=\"#vminfo\" class=\"btn modal-trigger btn-floating btn-large waves-effect waves-light red\"><i class=\"material-icons\">add</i></a><div id=\"preloader\" class=\"preloader-wrapper small active\"><div class=\"spinner-layer spinner-red-only\"><div class=\"circle-clipper left\"><div class=\"circle\"></div></div><div class=\"gap-patch\"><div class=\"circle\"></div></div><div class=\"circle-clipper right\"><div class=\"circle\"></div></div></div></div></td></tr></tbody></table></div>";
+                     $("#saninfo").append(htmlSanInfo);
+                     $("#btnvminfo").hide();
+                     $('.modal-trigger').leanModal();
+                 } else {
+                     var htmlDSGraph = "<div class=\"col m3 s12\"><div id=\"" + placeholder + "\" style=\"width:100%; height:400px;\"></div></div>";
+                     $("#datastoregraph").append(htmlDSGraph);
+                     var htmlDSInfo = "<div class=\"col m3 s12\"><table class=\"striped centered\"><tbody><tr><td>Used Space</td><td id=\"" + placeholder + "_usedSpace\">" + (parseFloat(capacity) - parseFloat(freeSpace)) + " GB</td></tr><tr><td><strong>Free Space</strong></td><td><div class=\"card-panel teal lighten-3\"><strong id=\"" + placeholder + "_freespace\">" + freeSpace + " GB</strong></div></td></tr><tr><td>Total Space</td><td id=\"" + placeholder + "_totalspace\">" + capacity + " GB</td></tr></tbody></table></div>";
+                     //$("#datastoreinfo").append(htmlDSInfo);
+                 }
+            }
+            
+            function addServerInfo(data) {
+                var htmlServerInfo = "";
+                jQuery.each(data.serversInfo, function() {
+                    htmlServerInfo = htmlServerInfo + "<div class=\"row\"><div class=\"col s6\"><img src=\"css/img/server.jpg\"></div><div style=\"margin-top:15px\" class=\"col s6\">IP: " + this.ip + "<br>Allocated CPU: " + this.allocatedCpu + "<br>Allocated RAM: " + this.allocatedRam + "</div></div>";
+                });
+                //$("#serverinfo").append(htmlServerInfo);
+            }
+
+			function drawDatastoreChart(json) {
+			 Highcharts.setOptions({
+				 colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+				});
+			  $('#'+json.name).highcharts({
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie'
+					},
+					title: {
+						text: json.name,
+						y: 70
+					},
+					tooltip: {
+						pointFormat: '<b>{point.y} GB</b>'
+						//pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					},
+					plotOptions: {
+						pie: {
+							size:'70%',
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								enabled: true,
+								format: '{point.name}: {point.percentage:.1f} %',
+								distance: -30,
+								color:'black'
+							},
+							showInLegend: false
+						}
+					},
+					series: [{
+						name: 'Storage',
+						colorByPoint: true,
+						data: [{
+							name: 'Free Space',
+							y: parseFloat(json.freeSpace)
+						}, {
+							name: 'Used Space',
+							y: (parseFloat(json.capacity) - parseFloat(json.freeSpace))
+						}]
+					}]
+				});
+			};
+			
+			function drawCpuChart(json) {
+             Highcharts.setOptions({
+                 colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+                });
+              $('#cpu_'+json.ip.split(".").join("_")).highcharts({
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: "",
+                        y: 70
+                    },
+                    tooltip: {
+                        pointFormat: '<b>{point.y} MHz</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            size:'50%',
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}: {point.percentage:.1f} %',
+                                distance: -10,
+                                color:'black'
+                            },
+                            showInLegend: false
+                        }
+                    },
+                    series: [{
+                        name: 'CPU',
+                        colorByPoint: true,
+                        data: [{
+                            name: 'Free CPU',
+                            y: (parseFloat("31904") - parseFloat(json.allocatedCpu))
+                        }, {
+                            name: 'Used CPU',
+                            y: parseFloat(json.allocatedCpu)
+                        }]
+                    }]
+                });
+            };
+            
+            
+            function drawMemoryChart(json) {
+             Highcharts.setOptions({
+                 colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+                });
+              $('#mem_'+json.ip.split(".").join("_")).highcharts({
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: "",
+                        y: 70
+                    },
+                    tooltip: {
+                        pointFormat: '<b>{point.y} MB</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            size:'50%',
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name}: {point.percentage:.1f} %',
+                                distance: -10,
+                                color:'black'
+                            },
+                            showInLegend: false
+                        }
+                    },
+                    series: [{
+                        name: 'Memory',
+                        colorByPoint: true,
+                        data: [{
+                            name: 'Free Memory',
+                            y: (parseFloat("131037") - parseFloat(json.allocatedRam))
+                        }, {
+                            name: 'Used Memory',
+                            y: parseFloat(json.allocatedRam)
+                        }]
+                    }]
+                });
+            };
+		</script>
+
+	</body>
+</html>
