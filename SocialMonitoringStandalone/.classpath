@@ -67,6 +67,6 @@
 	<classpathentry kind="lib" path="lib/spreadsheet/guava-11.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/spreadsheet/jsr305.jar"/>
 	<classpathentry kind="lib" path="lib/tools/pipeline-engine.jar"/>
-	<classpathentry kind="lib" path="lib/tools/thread_queue.jar"/>
+	<classpathentry kind="lib" path="lib/tools/thread_queue.jar" sourcepath="/ThreadQueue"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -71,7 +71,7 @@ public class FacebookPSARQueueThreadPost {
 		String time = sdf.format(currentDate);
 		String input = inputFile.split("\\.")[0];
 //		String psarFileName = outFold + "FB_" + from + "_TO_" + to + "_PSAR_" + input + "-" + time + ".csv";
-		String psarFileName = outFold + "FB__TO__PSAR_" + input + "-" + time + ".csv";
+		String psarFileName = outFold + "/FB__TO__PSAR_" + input + "-" + time + ".csv";
 		CsvWriter outWriter = openOutputFile(psarFileName);
 		LOGGER.info("Output File name: " + psarFileName);
 		
@@ -131,28 +131,28 @@ public class FacebookPSARQueueThreadPost {
 		}
 		
 		
-		/*Coda per le BaseInfo*/
-		LOGGER.info("Creating Base Info Queue");	
-		Enumeration<PSAR> psars = result.elements();
-		while (psars.hasMoreElements()) {
-			PSAR curr = psars.nextElement();
-			/*Aggiungo un worker alla coda delle BaseInfo*/
-			RunnableQueueBaseInfoImpl workerBaseInfo = new RunnableQueueBaseInfoImpl(curr);
-			workerBaseInfo.setName(curr.getId());
-			queueBaseInfo.addThread(workerBaseInfo);
-		}
-		
-		/*Avvio la coda*/
-		try {
-			LOGGER.info("Starting Base Info Queue");
-			start = System.currentTimeMillis();
-			queueBaseInfo.executeAndWait();
-			end = System.currentTimeMillis();
-			LOGGER.info("Elapsed Time for Base Info Queue: " + (end - start)/1000 + " seconds");
-		} catch (TimeoutException e1) {
-			e1.printStackTrace();
-			LOGGER.log(Level.SEVERE, e1.getMessage(), e1);
-		}
+//		/*Coda per le BaseInfo*/
+//		LOGGER.info("Creating Base Info Queue");	
+//		Enumeration<PSAR> psars = result.elements();
+//		while (psars.hasMoreElements()) {
+//			PSAR curr = psars.nextElement();
+//			/*Aggiungo un worker alla coda delle BaseInfo*/
+//			RunnableQueueBaseInfoImpl workerBaseInfo = new RunnableQueueBaseInfoImpl(curr);
+//			workerBaseInfo.setName(curr.getId());
+//			queueBaseInfo.addThread(workerBaseInfo);
+//		}
+//		
+//		/*Avvio la coda*/
+//		try {
+//			LOGGER.info("Starting Base Info Queue");
+//			start = System.currentTimeMillis();
+//			queueBaseInfo.executeAndWait();
+//			end = System.currentTimeMillis();
+//			LOGGER.info("Elapsed Time for Base Info Queue: " + (end - start)/1000 + " seconds");
+//		} catch (TimeoutException e1) {
+//			e1.printStackTrace();
+//			LOGGER.log(Level.SEVERE, e1.getMessage(), e1);
+//		}
 		
 		LOGGER.info("Writing result to file");
 		Enumeration<PSAR> elements = result.elements();
