@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>Ricerca Evoluta</title>
+			<link rel="icon" href="favicon.ico" />
+			<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+			<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
+			<link type="text/css" rel="stylesheet" href="css/jquery-ui.structure.min.css">
+			<link type="text/css" rel="stylesheet" href="css/jquery-ui.theme.min.css">
+			<link type="text/css" rel="stylesheet" href="css/site.css" />
+			<link type="text/css" rel="stylesheet" href="css/jquery.dynatable.css" />
+			<meta name="theme-color" content="#ffffff">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+			<meta property="og:title" content="NFEP Mockup">
+			<meta property="og:site_name" content="NFEP Mockup">
+			<meta property="og:description" content="NFEP Mockup">
+			<meta property="og:locale" content="it_IT">
+			<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+			<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+			<script type="text/javascript" src="js/jquery.dynatable.js"></script>
+			<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+			<script type="text/javascript" src="js/materialize.min.js"></script>
+			<script type="text/javascript" src="js/solr_ricerca_evoluta.js"></script>
+		</head>
+	
+	<body>
+	
+		<header>
+			<div class="navbar-fixed">
+				<nav>
+					<div class="nav-wrapper blue darken-3">
+						<a class="brand-logo">RicEvo</a>
+						<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+						<ul class="right hide-on-med-and-down">
+							<li><a href="index.html"><i class="material-icons left">search</i>Ricerca Usage NFEA</a></li>
+							<li><a href="ricevoluta.html"><i class="material-icons left">zoom_in</i>Ricerca Evoluta</a></li>
+						</ul>
+						<ul class="side-nav" id="mobile-demo">
+							<li><a class="waves-effect waves-light" href="index.html"><i class="material-icons right">search</i>Ricerca Usage NFEA</a></li>
+					        <li><a class="waves-effect waves-light" href="ricevoluta.html"><i class="material-icons right">zoom_in</i>Ricerca Evoluta</a></li>
+					    </ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+		
+		<main>
+			<div class="container">
+				<div class="row">
+					<div class="col s12 m12 l12"><h5><i class="material-icons prefix center">zoom_in</i>Ricerca Evoluta</h5></div>
+				</div>
+				
+					<div class="row">
+						<div class="input-field col s10">
+							<input placeholder="Search..." id="free_text" type="text" class="validate">
+						</div>
+						<div class="input-field col s2">
+							<a id="search_btn" class="btn-floating" onclick="cercaTestoLiberoClick()"><i class="material-icons">zoom_in</i></a>
+						</div>
+					</div>
+					<div class="row">
+					<div id="preloader" class="preloader">
+						<div class="preloader-wrapper small active align-center">
+		                	<div class="spinner-layer spinner-green-only">
+		                    	<div class="circle-clipper left">
+		                    		<div class="circle"></div>
+		                      	</div>
+		                      	<div class="gap-patch">
+		                        	<div class="circle"></div>
+		                      	</div>
+		                      	<div class="circle-clipper right">
+		                        	<div class="circle"></div>
+		                      </div>
+		                    </div>
+	                  	</div>
+	                  </div>
+	                  	<div id="solr_num_result" class="gray-text"></div>
+						<div id="solr_result"></div>
+					</div>
+			</div>
+			<div>
+				<div id="navig" class="row">
+					<div id="previousSearch" class="col s6"></div>
+					<div id="nextSearch" class="col s6"></div>
+				</div>
+			</div>
+		</main>
+			
+		<footer class="page-footer style-footer">
+			<div class="line-break"></div>
+			<div class="container">
+				<div class="footer-copyright container-footer style-footer-copyright black-text center">
+					<div class="center">
+						<img alt="logo" src="img/logo.png" width="40px" class="aligned-img">
+						Software Factory Napoli
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<!-- Modal Structure -->
+		<div id="modalWindow" class="modal bottom-sheet">
+		  <div class="modal-content">
+		    <h4 id="modalHeader">Modal Header</h4>
+		    <ul class="collection" id="modal-content"></ul>
+		  </div>
+		  <div class="modal-footer">
+		    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Chiudi</a>
+		  </div>
+		</div>
+
+		<script>
+			$(document).ready(function(){
+				$("#preloader").hide();
+				$(".button-collapse").sideNav();
+				$("#free_text").val("*");
+				$('.modal-trigger').leanModal();
+				$('#free_text').keypress(function(e){
+        			if(e.which == 13) {//Enter key pressed
+        				$("#preloader").show();
+            			$('#search_btn').click();//Trigger search button click event
+        			}
+    			});
+				
+			});
+		</script>
+	</body>
+	
+</html>

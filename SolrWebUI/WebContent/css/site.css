@@ -1,0 +1,125 @@
+body {
+	display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+	flex: 1 0 auto;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../font/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(../font/MaterialIcons-Regular.woff2) format('woff2'),
+       url(../font/MaterialIcons-Regular.woff) format('woff'),
+       url(../font/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+.link:hover {
+   background-color: #efefef;
+   cursor: pointer;
+}
+
+.style-footer {
+    background-color: #ffffff !important;
+    z-index: 10;
+}
+
+.style-footer-copyright {
+    background-color: #ffffff !important;
+    padding: 0 20px 0 0;
+}
+
+.solr-res-title {
+	font-size: 18px;
+}
+
+.solr-res {
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.brand-logo {
+	margin-left: 10px;
+}
+
+.container {
+	width: 90%;
+	margin-bottom: 100;
+}
+
+.mt10 {
+	margin-top:10px;
+}
+
+.table-distance {
+	margin-top:100px;
+}
+
+.mt10dn {
+	margin-top:10px;
+	display:none;
+}
+
+.line-break {
+	background-color:#1565C0;
+	height:1px;
+}
+
+.aligned-img {
+	vertical-align:middle;
+}
+
+.btn-floating {
+	background-color:#DFDFDF;
+}
+
+.preloader {
+	margin-left:40%;
+	margin-top:50px;
+}
+
+.gray-text {
+	color: gray;
+}
+
+.modal-link {
+	cursor: pointer;
+}
+  
+.nfea-table {
+}
+
+.nfea-table thead th {
+    background-color: rgb(50, 150, 230);
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>Ricerca usage NFEA</title>
+			<link rel="icon" href="favicon.ico" />
+			<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+			<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
+			<link type="text/css" rel="stylesheet" href="css/jquery-ui.structure.min.css">
+			<link type="text/css" rel="stylesheet" href="css/jquery-ui.theme.min.css">
+			<link type="text/css" rel="stylesheet" href="css/site.css" />
+			<link type="text/css" rel="stylesheet" href="css/jquery.dynatable.css" />
+			<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.1.10.12.min.css">
+			<meta name="theme-color" content="#ffffff">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+			<meta property="og:title" content="NFEP Mockup">
+			<meta property="og:site_name" content="NFEP Mockup">
+			<meta property="og:description" content="NFEP Mockup">
+			<meta property="og:locale" content="it_IT">
+			<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+			<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+			<script type="text/javascript" src="js/jquery.dynatable.js"></script>
+			<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+			<script type="text/javascript" src="js/materialize.min.js"></script>
+			<script type="text/javascript" src="js/solr_ricerca_nfea.js"></script>
+			<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.1.10.12.min.js"></script>
+			
+		</head>
+	
+	<body>
+	
+	<header>
+		<div class="navbar-fixed">
+			<nav>
+				<div class="nav-wrapper blue darken-3">
+					<a class="brand-logo">RicEvo</a>
+					<a data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+					<ul class="right hide-on-med-and-down">
+						<li><a href="index.html"><i class="material-icons left">search</i>Ricerca Usage NFEA</a></li>
+						<li><a href="ricevoluta.html"><i class="material-icons left">zoom_in</i>Ricerca Evoluta</a></li>
+					</ul>
+					<ul class="side-nav" id="mobile-demo">
+						<li><a class="waves-effect waves-light" href="index.html"><i class="material-icons right">search</i>Ricerca Usage NFEA</a></li>
+				        <li><a class="waves-effect waves-light" href="ricevoluta.html"><i class="material-icons right">zoom_in</i>Ricerca Evoluta</a></li>
+				    </ul>
+				</div>
+			</nav>
+		</div>
+	</header>
+	
+	<main>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col s12 m6 l6"><h5>Ricerca Usage NFEA<i class="material-icons prefix left">search</i></h5></div>
+			<div class="col s12 m6 l6">
+				<a id="hidebtn" class="waves-effect waves-light btn blue darken-4 right mt10" onclick="hidefields()"><i class="material-icons left">arrow_drop_up</i></a>
+				<a id="showbtn" class="waves-effect waves-light btn blue darken-4 right mt10dn" onclick="showfields()"><i class="material-icons left">arrow_drop_down</i></a>
+			</div>
+		</div>
+	
+	
+	
+		<div class="card-panel">
+		
+		<div id="fields">
+			<div class="row">
+				<div class="input-field col s12 m12 l12">
+					<i class="material-icons prefix">perm_identity</i>
+					<select id="ruolo" name="ruolo">
+						<option value="tutti">Tutti</option>
+						<option value="cliente">Cliente</option>
+						<option value="mittente">Mittente</option>
+						<option value="richiedente">Richiedente</option>
+						<option value="destinatario">Destinatario</option>
+						<option value="intermediario">Intermediario</option>
+					</select>
+					<label>Ruolo</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12 m12 l12">
+					<i class="material-icons prefix">assignment_ind</i>
+					<input id="nominativo" name="nominativo" type="text" class="validate" required>
+					<label for="nominativo" data-error="Nome non corretto" data-success="OK">Nominativo/Ragione Sociale</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12 m12 l12">
+					<i class="material-icons prefix">place</i>
+					<input id="indirizzo" name="indirizzo" type="text" class="validate">
+					<label for="indirizzo" data-error="Nome non corretto" data-success="OK">Indirizzo</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12 m12 l12">
+					<i class="material-icons prefix">chrome_reader_mode</i>
+					<input id="datifiscali" name="datifiscali" type="text" class="validate">
+					<label for="datifiscali" data-error="Nome non corretto" data-success="OK">Partita IVA/CF</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12 m6 l6">
+					<i class="material-icons prefix">date_range</i>
+					<input id="datada" name="datada" type="date" class="datepicker ">
+					<label for="datada">Data da</label>
+				</div>
+				<div class="input-field col s12 m6 l6">
+					<i class="material-icons prefix">date_range</i>
+					<input id="dataa" name="dataa" type="date" class="datepicker ">
+					<label for="dataa">a</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12 m12 l12">
+					<i class="material-icons prefix">textsms</i>
+					<input id="testolibero" name="testolibero" type="text" class="validate">
+					<label for="testolibero" data-error="Nome non corretto" data-success="OK">Testo Libero</label>
+				</div>
+			</div>
+		</div>
+		
+		</div>
+		
+		<div class="row">
+			<div class="input-field col s12 m12 l12">
+				<a id="search_btn" class="waves-effect waves-light blue darken-4 btn" onclick="solrRequest()"><i class="material-icons right">search</i>Cerca</a>
+				<a class="waves-effect waves-light blue darken-4 btn" href="index.html"><i class="material-icons right">clear_all</i>Cancella</a>
+			</div>
+		</div>
+
+	<div id="divAdc" class="nfea-table table-distance">
+		<div><h5>Risultati Ricerca ADC</h5></div>		
+	      <table id="adctable" class="compact" cellspacing="0" width="100%">
+		        <thead>
+		            <tr>
+		                <th>Id-Usage</th>
+		                <th>Canale-Accettazione</th>
+		                <th>ID-Prodotto/Servizio</th>
+		                <th>Data/Ora-Accettazione</th>
+		                <th>Fase</th>
+		            </tr>
+		        </thead>
+		    </table>
+	 </div>
+
+		<div id="divSolr" class="nfea-table table-distance">
+		<div><h5>Risultati Ricerca Evoluta</h5></div>
+			<table id="solrtable" class="compact" cellspacing="0" width="100%">
+		        <thead>
+		            <tr>
+		                <th>Id-Usage</th>
+		                <th>Canale-Accettazione</th>
+		                <th>ID-Prodotto/Servizio</th>
+		                <th>Data/Ora-Accettazione</th>
+		                <th>Fase</th>
+		                <th>Dettagli</th>
+		            </tr>
+		        </thead>
+		    </table>
+		</div>
+		
+	</div>
+	</main>
+		
+	<footer class="page-footer style-footer">
+		<div class="line-break"></div>
+		<div class="container">
+			<div class="footer-copyright container-footer style-footer-copyright black-text center">
+				<div class="center">
+					<img alt="logo" src="img/logo.png" width="40px" class="aligned-img">
+					Software Factory Napoli
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+	$(document).ready(function(){
+		$(".button-collapse").sideNav();
+		$('select').material_select();
+		$("#nominativo").val("doris");
+		$("#datada").val("2015-03-13");
+		$("#dataa").val("2015-03-15");
+		$( "#divSolr" ).hide();
+		$( "#divAdc" ).hide();
+		$('#fields').keypress(function(e){
+        	if(e.which == 13) {//Enter key pressed
+          		$('#search_btn').click();//Trigger search button click event
+        	}
+    	});
+    	$('#solrtable').DataTable({
+		    "lengthChange": false,
+		    columnDefs: [
+            {
+                targets: [ 0, 1, 2 ],
+                className: 'mdl-data-table__cell--non-numeric'
+            }
+        ]
+		});
+		$('#adctable').DataTable({
+		    "lengthChange": false,
+		    columnDefs: [
+            {
+                targets: [ 0, 1, 2 ],
+                className: 'mdl-data-table__cell--non-numeric'
+            }
+        ]
+		});
+	});
+	
+	$('.datepicker').pickadate({
+	    selectMonths: true, // Creates a dropdown to control month
+	    selectYears: 15, // Creates a dropdown of 15 years to control year
+	    format: 'yyyy-mm-dd'
+	  });
+	</script>
+	
+	</body>
+	
+	</html>
