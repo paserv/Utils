@@ -1,0 +1,15 @@
+/__init__.pyc
+/aliases.pyc
+/ascii.pyc
+/cp1252.pyc
+/cp850.pyc
+/hex_codec.pyc
+/idna.pyc
+/latin_1.pyc
+/mbcs.pyc
+/unicode_escape.pyc
+/utf_16.pyc
+/utf_16_be.pyc
+/utf_16_le.pyc
+/utf_32_be.pyc
+/utf_8.pyc

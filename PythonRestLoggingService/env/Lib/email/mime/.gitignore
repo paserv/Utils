@@ -1,0 +1,8 @@
+/__init__.pyc
+/audio.pyc
+/base.pyc
+/image.pyc
+/message.pyc
+/multipart.pyc
+/nonmultipart.pyc
+/text.pyc

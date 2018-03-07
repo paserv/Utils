@@ -1,0 +1,14 @@
+/__init__.pyc
+/_parseaddr.pyc
+/base64mime.pyc
+/charset.pyc
+/encoders.pyc
+/errors.pyc
+/feedparser.pyc
+/generator.pyc
+/header.pyc
+/iterators.pyc
+/message.pyc
+/parser.pyc
+/quoprimime.pyc
+/utils.pyc
