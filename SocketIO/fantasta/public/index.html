@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Fantasta</title>
+</head>
+
+<body>
+    <form id="createform">
+        <fieldset>
+            <legend>Create Room</legend>
+            <ol>
+                <li>
+                    <label for="roomToCreate">Nome Asta</label>
+                    <input id="roomToCreate" name="roomToCreate" type="text" placeholder="Room name" required autofocus>
+                </li>
+                <li>
+                    <label for="numMembers">Numero Partecipanti</label>
+                    <input id="numMembers" name="numMembers" type="number" placeholder="Members" required>
+                </li>
+                <li>
+                    <label for="nickName">Nick</label>
+                    <input id="nickName" name="nickName" type="text" placeholder="Nick" required>
+                </li>
+            </ol>
+        </fieldset>
+        <button type="submit">Create</button>
+    </form>
+
+    <form id="joinform">
+        <fieldset>
+            <legend>Join Room</legend>
+            <ol>
+                <li>
+                    <label for="roomToJoin">Nome Asta</label>
+                    <input id="roomToJoin" name="roomToJoin" type="text" placeholder="Room name" required autofocus>
+                </li>
+                <li>
+                    <label for="nickNameJ">Nick</label>
+                    <input id="nickNameJ" name="nickNameJ" type="text" placeholder="Nick" required>
+                </li>
+            </ol>
+        </fieldset>
+        <button type="submit">Join</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        $(function () {
+            var socket = io();
+            $('#createform').submit(function (e) {
+                e.preventDefault(); // prevents page reloading
+                socket.emit('check-room', $('#roomToCreate').val());
+                return false;
+            });
+            $('#joinform').submit(function (e) {
+                e.preventDefault(); // prevents page reloading
+                socket.emit('check-nick', $('#roomToJoin').val(), $('#nickNameJ').val());
+                return false;
+            });
+            socket.on('check-room', function (check) {
+                if (!check) {
+                    alert('Room unaivailable!');
+                } else {
+                    let url = 'room.html?room=' + $('#roomToCreate').val() + '&members=' + $('#numMembers').val() + '&nick=' + $('#nickName').val();
+                    window.location.href = url;
+                }
+            });
+            socket.on('check-nick', function (check) {
+                if (!check) {
+                    alert('Nick exists!');
+                }
+                else {
+                    let url = 'room.html?room=' + $('#roomToJoin').val() + '&nick=' + $('#nickNameJ').val();
+                    window.location.href = url;
+                }
+            });
+            socket.on('check-full', function (check) {
+                alert('Room is FULL!');
+
+            });
+        });
+    </script>
+</body>
+
+</html>

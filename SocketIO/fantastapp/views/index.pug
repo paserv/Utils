@@ -1,0 +1,201 @@
+mixin test()
+  - let g = "PABLO";
+  h1= g
+
+doctype html
+html(lang="en")
+  head
+    title Fantasta
+    meta(charset="utf-8")
+    style
+  //- [START appengine_websockets_form]
+  body
+    ul(id="members")
+    div(id="forms")
+      form(id="createform" action="")
+        fieldset
+          legend Create Room
+          ol
+            li
+              label(for="roomToCreate") Nome Asta
+              input(type="text" id="roomToCreate" name="roomToCreate" placeholder="Room name" autocomplete="off" required)
+            li
+              label(for="numMembers") Numero Partecipanti
+              input(type="number" id="numMembers" name="numMembers" placeholder="Members" autocomplete="off" required)
+            li
+              label(for="nickName") Nick
+              input(type="text" id="nickName" name="nickName" placeholder="Nick" autocomplete="off" required)
+        button Create
+
+      form(id="joinform" action="")
+        fieldset
+          legend Join Room
+          ol
+            li
+              label(for="roomToJoin") Nome Asta
+              input(type="text" id="roomToJoin" name="roomToJoin" placeholder="Room name" autocomplete="off" required)
+            li
+              label(for="nicnickNameJkName") Nick
+              input(type="text" id="nickNameJ" name="nickNameJ" placeholder="Nick" autocomplete="off" required)
+        button Join
+    div(id="waiting") Waiting
+
+    div(id="workspace")
+      div(id="currentchoosingmember")
+      div(id="chooseplayer")
+        select(id="playersselect")
+        button(id="playerselectbtn") Offerta
+      div(id="choosedforoffer")
+      div(id="offeringbox")
+        input(id="offer", type="number")
+        div(id="offerbtns")
+          button(id="doofferbtn") Rilancia
+          button(id="leavebtn") Lascia
+      div(id="offerinfo")
+        
+
+    script(src="/socket.io/socket.io.js")
+    script(src="https://code.jquery.com/jquery-1.11.1.js")
+    script.
+      $(function () {
+        $('#waiting').hide();
+        $('#workspace').hide();
+        $('#chooseplayer').hide();
+        $('#offeringbox').hide();
+
+        $.get( "/players", function( data ) {
+          var lines = data.split("\r");
+          for (var count = 0; count < lines.length; count++) {
+            var rowContent = lines[count].split(";");
+            $("#playersselect").append(new Option(rowContent[2] + "(" + rowContent[3] + ")", rowContent[2]));
+          }
+        });
+
+        var socket = io();
+        var nick;
+        var room;
+        var currentPlayer;
+
+        $('#createform').submit(function (e) {
+          e.preventDefault(); // prevents page reloading
+          nick = $('#nickName').val();
+          room = $('#roomToCreate').val();
+          socket.emit('create', $('#roomToCreate').val(), $('#numMembers').val(), $('#nickName').val());
+          return false;
+        });
+        $('#joinform').submit(function (e) {
+            e.preventDefault(); // prevents page reloading
+            nick = $('#nickNameJ').val();
+            room = $('#roomToJoin').val();
+            socket.emit('join', $('#roomToJoin').val(), $('#nickNameJ').val());
+            return false;
+        });
+        socket.on('message', function (msg) {
+          alert(msg);
+        });
+        socket.on('wait', function (msg) {
+          $('#forms').hide();
+          $('#waiting').show();
+        });
+        socket.on('members', function (members) {
+          $('#forms').hide();
+          $('#members').text('');
+          for (let member of members) {
+            if (nick == member.nick) {
+              $('#members').append('<li id="' + member.id +'"><strong>' + member.nick + '</strong></li>');
+            } else {
+              $('#members').append('<li id="' + member.id +'">' + member.nick + '</li>');
+            }
+            
+          }
+        });
+        socket.on('userdisconnect', function (id) {
+          if ($('#' + id)) {
+            $('#' + id).remove();
+            $('#waiting').show();
+            $("#workspace").hide();
+          }
+        });
+        socket.on('start', function (whoStarts) {
+          $('#workspace').show();
+          $('#waiting').hide();
+          $('#offeringbox').hide();
+          $('#choosedforoffer').text("");
+          $('#offerinfo').text("");
+          $('#currentchoosingmember').text("Turno di: " + whoStarts.nick);
+          if (whoStarts.id == socket.id) {
+            $('#chooseplayer').show();
+          }
+        });
+        socket.on('choosed', function (player, playerteam) {
+          $('#chooseplayer').hide();
+          $('#choosedforoffer').text(playerteam);
+          socket.emit('ackchoosed', room, player, playerteam);
+        });
+        socket.on('reackchoosed', function (playerTeam, bestOffering, currentOffer) {
+          $('#offeringbox').show();
+          $("#offerbtns").show();
+          $('#offer').val(parseInt(currentOffer));
+          if (nick == bestOffering.nick) {
+            $("#offerbtns").hide();
+          } else {
+            $('#offer').val(parseInt(currentOffer) + 1);
+          }
+          $('#offerinfo').text("Miglior offerente: " + bestOffering.nick + " " + currentOffer + " FTR");
+          currentPlayer = playerTeam;
+        });
+        socket.on('reconnect', function (playerTeam, bestOffering, currentOffer) {
+          $('#workspace').show();
+          $('#waiting').show();
+          if (playerTeam && bestOffering) {
+            $('#waiting').hide();
+            $('#offeringbox').show();
+            $('#currentchoosingmember').text("Turno di: " + bestOffering.nick);
+            $('#choosedforoffer').text(playerTeam);
+            $("#offerbtns").show();
+            if (nick == bestOffering.nick) {
+              $("#offerbtns").hide();
+            } else {
+              $('#offer').val(parseInt(currentOffer) + 1);
+            }
+            $('#offerinfo').text("Miglior offerente: " + bestOffering.nick + " " + currentOffer + " FTR");
+            currentPlayer = playerTeam;
+          }
+        });
+        socket.on('newoffer', function (player, playerteam, offer, nick) {
+          $('#workspace').hide();
+          $('#waiting').show();
+          socket.emit('acknewoffer', room, player, playerteam, offer, nick);
+        });
+        socket.on('reacknewoffer', function (playerTeam, bestOffering, currentOffer) {
+          $('#workspace').show();
+          $("#offerbtns").show();
+          if (nick == bestOffering.nick) {
+            $("#offerbtns").hide();
+          } else {
+            $('#offer').val(parseInt(currentOffer) + 1);
+          }
+          $('#offerinfo').text("Miglior offerente: " + bestOffering.nick + " " + currentOffer + " FTR");
+          currentPlayer = playerTeam;
+        });
+        socket.on('membersWhoLeft', function (leftMembers) {
+          for (let member of leftMembers) {
+            console.log("Left: " + member.id);
+            $("#" + member.id).hide();
+          }
+        });
+
+
+
+        $("#playerselectbtn").on( "click", function() {
+          socket.emit('offer', room, $("#playersselect").val(), $("#playersselect").find('option:selected').text());
+        });
+
+         $("#doofferbtn").on( "click", function() {
+          socket.emit('dooffer', room, $("#playersselect").val(), $("#playersselect").find('option:selected').text(), $("#offer").val(), nick);
+        });
+
+        $("#leavebtn").on( "click", function() {
+          socket.emit('memberleave', room, $("#playersselect").val(), $("#playersselect").find('option:selected').text(), nick);
+        });
+      });

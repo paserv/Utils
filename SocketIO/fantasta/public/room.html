@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Room</title>
+</head>
+
+<body>
+    <ul id="members">
+
+    </ul>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        function GetURLParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        }
+        $(function () {
+            var socket = io();
+            var room = GetURLParameter('room');
+            var members = GetURLParameter('members');
+            var nick = GetURLParameter('nick');
+            if (room && members && nick) {
+                socket.emit('create', room, members, nick);
+            } else if (room && nick) {
+                socket.emit('join', room, nick);
+            }
+
+            socket.on('members', function (members) {
+                console.log(members);
+                $('#members').text('');
+                for (let member of members) {
+                    $('#members').append('<li id="' + member.id +'">' + member.nick + '</li>');
+                }
+            });
+            socket.on('userdisconnect', function (id) {
+                $('#' + id).remove();
+            });
+        });
+    </script>
+</body>
+
+</html>
